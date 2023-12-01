@@ -7,6 +7,12 @@ $(document).ready(() => {
     }
   });
 
+  const USER_ID = $("#user_id").text()
+  let SCHOOL_ID
+  $.get(`/api/v1/admins/${USER_ID}`, function(data) {
+    SCHOOL_ID = data.datas.school_id
+  })
+
   const d = new Date();
   $("#date").html(d.toLocaleString("id-ID", {
     dateStyle: "medium",
@@ -205,7 +211,12 @@ $(document).ready(() => {
         $("#assign-table").DataTable({
           ajax: {
             url: "/api/v1/students",
-            dataSrc: "datas",
+            dataSrc: function(json){
+              let filteredData = json.datas.filter(function (data) {
+                return data.school_id === SCHOOL_ID;
+              });
+              return filteredData;
+            },
           },
           pageLength: -1,
           lengthMenu: [[-1], ["Semua"]],
@@ -528,7 +539,7 @@ $(document).ready(() => {
     formData.append("allImage", allImage)
     e.preventDefault();
     $.ajax({
-      url: "/api/v1/exams",
+      url: `/api/v1/exams/${unique_id}`,
       type: "PUT",
       data: formData,
       async: false,
@@ -554,7 +565,6 @@ $(document).ready(() => {
   $("#form-hapus-ujian").on("submit", function (e) {
     e.preventDefault();
     const formData = new FormData(this);
-    formData.append("exam_unique_id", unique_id);
     formData.append("question_unique_id", question_id);
     formData.append("allImage", allImage)
 
