@@ -534,12 +534,24 @@ video {
   --tw-backdrop-sepia:  ;
 }
 
+.invisible {
+  visibility: hidden;
+}
+
 .fixed {
   position: fixed;
 }
 
+.relative {
+  position: relative;
+}
+
 .bottom-0 {
   bottom: 0px;
+}
+
+.bottom-10 {
+  bottom: 2.5rem;
 }
 
 .left-0 {
@@ -592,6 +604,10 @@ video {
   margin-bottom: 1.25rem;
 }
 
+.me-8 {
+  margin-inline-end: 2rem;
+}
+
 .ml-2 {
   margin-left: 0.5rem;
 }
@@ -638,6 +654,10 @@ video {
 
 .mt-8 {
   margin-top: 2rem;
+}
+
+.mt-auto {
+  margin-top: auto;
 }
 
 .block {
@@ -701,8 +721,16 @@ video {
   width: 1rem;
 }
 
+.w-\[20\%\] {
+  width: 20%;
+}
+
 .w-\[240px\] {
   width: 240px;
+}
+
+.w-\[30\%\] {
+  width: 30%;
 }
 
 .w-\[300px\] {
@@ -770,6 +798,10 @@ video {
   justify-content: space-between;
 }
 
+.gap-1 {
+  gap: 0.25rem;
+}
+
 .gap-2 {
   gap: 0.5rem;
 }
@@ -830,9 +862,23 @@ video {
   border-width: 2px;
 }
 
+.border-4 {
+  border-width: 4px;
+}
+
 .border-\[\#2C7D5E\] {
   --tw-border-opacity: 1;
   border-color: rgb(44 125 94 / var(--tw-border-opacity));
+}
+
+.border-\[\#DA8F4A\] {
+  --tw-border-opacity: 1;
+  border-color: rgb(218 143 74 / var(--tw-border-opacity));
+}
+
+.border-\[\#FFF1E4\] {
+  --tw-border-opacity: 1;
+  border-color: rgb(255 241 228 / var(--tw-border-opacity));
 }
 
 .border-gray-300 {
@@ -866,6 +912,11 @@ video {
 .bg-\[\#F1F1F1\] {
   --tw-bg-opacity: 1;
   background-color: rgb(241 241 241 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#FFF1E4\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 241 228 / var(--tw-bg-opacity));
 }
 
 .bg-\[\#faebd7\] {
@@ -916,6 +967,10 @@ video {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
+.bg-\[\#418DFF\]\/20 {
+  background-color: rgb(65 141 255 / 0.2);
+}
+
 .object-cover {
   -o-object-fit: cover;
      object-fit: cover;
@@ -941,6 +996,11 @@ video {
 .px-12 {
   padding-left: 3rem;
   padding-right: 3rem;
+}
+
+.px-2 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
 .px-3 {
@@ -988,6 +1048,11 @@ video {
   padding-bottom: 0.375rem;
 }
 
+.py-10 {
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+}
+
 .py-2 {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
@@ -1028,16 +1093,36 @@ video {
   padding-bottom: 10px;
 }
 
+.py-\[1px\] {
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+
+.py-\[2px\] {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.py-\[3px\] {
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+.px-2\.5 {
+  padding-left: 0.625rem;
+  padding-right: 0.625rem;
+}
+
+.pb-5 {
+  padding-bottom: 1.25rem;
+}
+
 .pb-8 {
   padding-bottom: 2rem;
 }
 
 .pt-5 {
   padding-top: 1.25rem;
-}
-
-.pb-5 {
-  padding-bottom: 1.25rem;
 }
 
 .text-left {
@@ -1098,9 +1183,19 @@ video {
   color: rgb(0 0 0 / var(--tw-text-opacity));
 }
 
+.text-\[\#418DFF\] {
+  --tw-text-opacity: 1;
+  color: rgb(65 141 255 / var(--tw-text-opacity));
+}
+
 .text-\[\#954800\] {
   --tw-text-opacity: 1;
   color: rgb(149 72 0 / var(--tw-text-opacity));
+}
+
+.text-\[\#DA8F4A\] {
+  --tw-text-opacity: 1;
+  color: rgb(218 143 74 / var(--tw-text-opacity));
 }
 
 .text-\[\#FBDA5B\] {
@@ -1118,6 +1213,11 @@ video {
   color: rgb(239 68 68 / var(--tw-text-opacity));
 }
 
+.text-slate-500 {
+  --tw-text-opacity: 1;
+  color: rgb(100 116 139 / var(--tw-text-opacity));
+}
+
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
@@ -1125,6 +1225,10 @@ video {
 
 .text-white\/70 {
   color: rgb(255 255 255 / 0.7);
+}
+
+.opacity-0 {
+  opacity: 0;
 }
 
 .shadow-\[0_0px_40px_-15px_rgba\(0\2c 0\2c 0\2c 0\.2\)\] {
@@ -1204,6 +1308,11 @@ input[type="file"]::file-selector-button {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
+.hover\:border-\[\#DA8F4A\]:hover {
+  --tw-border-opacity: 1;
+  border-color: rgb(218 143 74 / var(--tw-border-opacity));
+}
+
 .hover\:bg-gray-100:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(243 244 246 / var(--tw-bg-opacity));
@@ -1267,4 +1376,12 @@ input[type="file"]::file-selector-button {
 
 .disabled\:bg-red-500\/50:disabled {
   background-color: rgb(239 68 68 / 0.5);
+}
+
+.peer:hover ~ .peer-hover\:visible {
+  visibility: visible;
+}
+
+.peer:hover ~ .peer-hover\:opacity-100 {
+  opacity: 1;
 }

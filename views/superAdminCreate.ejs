@@ -14,7 +14,7 @@
             <label class="block flex flex-col gap-2">
               <span class="text-white font-bold tracking-[1.4px] text-sm">Email <span class="text-red-500 font-medium text-xs">*</span></span>
               <!-- Using form state modifiers, the classes can be identical for every input -->
-              <input required type="email" placeholder="siswa@gmail.com" name="email" class="font-normal block border-0 w-full px-3 py-[10px] bg-white rounded-lg text-sm
+              <input required type="email" placeholder="admin@gmail.com" name="email" class="font-normal block border-0 w-full px-3 py-[10px] bg-white rounded-lg text-sm
               focus:outline-none focus:border-white-60 focus:ring-1 focus:ring-white-60
               focus:invalid:border-pink-500 focus:invalid:ring-pink-500
               "/>
@@ -63,6 +63,11 @@
               <button type="button" id="button-batal" class="py-1.5 px-8 bg-red-500 text-white rounded-full text-sm">Batal</button>
               <button type="submit" class="py-1.5 px-8 bg-main text-white rounded-full text-sm">Selesai</button>
             </div>
+          </div>
+          <div id="confirm-popup" class="w-[30%] bg-white m-auto flex flex-col items-center py-10 rounded-2xl gap-2 hidden">
+            <img src="/img/check.png" width="70" alt="">
+            <p class="text-sm">Data berhasil ditambahkan</p>
+            <button type="button" class="py-1.5 px-8 bg-main text-white rounded-full text-sm mt-4">OK</button>
           </div>
         </section>
       </form>
