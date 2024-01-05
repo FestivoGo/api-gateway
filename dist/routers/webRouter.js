@@ -98,5 +98,29 @@ router.get("/topik/edit/:id", JWT_1.validateTokenWebiste, (req, res) => {
         user: req.user,
     });
 });
+router.get("/festivo/login", (req, res) => {
+    res.render("FestivoLogin");
+});
+router.get("/festivo/schools", (req, res) => {
+    res.render("FestivoSchool");
+});
+router.get("/festivo/schools/create", (req, res) => {
+    res.render("FestivoSchool-Create");
+});
+router.get("/festivo/schools/edit", (req, res) => {
+    res.render("FestivoSchool-Edit");
+});
+router.get("/festivo/modules", (req, res) => {
+    res.render("FestivoModule");
+});
+router.get("/festivo/modules/create", (req, res) => {
+    res.render("FestivoModule-Create");
+});
+router.get("/festivo/superadmin", (req, res) => {
+    res.render("FestivoSuperadmin");
+});
+router.get("/festivo/superadmin/create", (req, res) => {
+    res.render("FestivoSuperadmin-Create");
+});
 module.exports = router;
 //# sourceMappingURL=webRouter.js.map
