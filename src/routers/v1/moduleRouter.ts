@@ -2,7 +2,7 @@ import express from "express"
 import { validateTokenAPI } from "../../utils/JWT";
 import Module from "../../models/Module";
 import School from "../../models/School";
-import { CreateModule, EditModule } from "../../controllers/v1/festivoController";
+import { CreateModule, DeleteModule, EditModule } from "../../controllers/v1/festivoController";
 
 const router = express.Router()
 
@@ -21,6 +21,7 @@ router.get("/:id", async (req, res) => {
 
 router.post('/', CreateModule);
 router.put('/:id', EditModule);
+router.delete('/:id', DeleteModule);
 
 
 export default router;

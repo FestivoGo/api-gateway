@@ -3,7 +3,7 @@ import { validateTokenAPI } from "../../utils/JWT";
 import Module from "../../models/Module";
 import School from "../../models/School";
 import SchoolModule from "../../models/SchoolModule";
-import { CreateSchool, EditSchool } from "../../controllers/v1/festivoController";
+import { CreateSchool, DeleteSchool, EditSchool } from "../../controllers/v1/festivoController";
 
 const router = express.Router()
 
@@ -32,6 +32,7 @@ router.get("/:id", async (req, res) => {
 });
 router.post('/', CreateSchool);
 router.put("/:id", EditSchool)
+router.delete('/:id', DeleteSchool);
 
 
 export default router;
