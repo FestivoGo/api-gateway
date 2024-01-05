@@ -1,19 +1,30 @@
-$("#side-sekolah").addClass("sidelist-selected")
+$("#side-superadmin").addClass("sidelist-selected")
 
 $("#button-selesai").click(function(){
     $("#popup").removeClass("hidden")
     $(".delete-popup").removeClass("hidden")
 })
+$("#button-batal").click(function(){
+    $("#popup").addClass("hidden")
+    $(".delete-popup").addClass("hidden")
+})
 $("#confirm-popup button").click(function(){
-    window.location = "/festivo/schools"
+    window.location = "/festivo/superadmin"
 })
 
-$("#form-school-create").on("submit", function (e) {
+$.get("/api/v1/schools", async (schoolData) => {
+  schoolData.forEach(school => {
+    $("#superadmin-school-select").append(`<option value="${school.school_id}">${school.school_name}</option>`)
+  })
+});
+
+$("#form-admin-create").on("submit", function (e) {
     e.preventDefault();
     const formData = new FormData(this);
+    formData.append("role", "super_admin")
   
     $.ajax({
-      url: "/api/v1/schools",
+      url: "/api/v1/superadmin",
       type: "POST",
       data: formData,
       contentType: false,

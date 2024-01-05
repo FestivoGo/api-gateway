@@ -107,7 +107,7 @@ router.get("/festivo/schools", (req, res) => {
 router.get("/festivo/schools/create", (req, res) => {
     res.render("FestivoSchool-Create");
 });
-router.get("/festivo/schools/edit", (req, res) => {
+router.get("/festivo/schools/:id", (req, res) => {
     res.render("FestivoSchool-Edit");
 });
 router.get("/festivo/modules", (req, res) => {
@@ -116,11 +116,17 @@ router.get("/festivo/modules", (req, res) => {
 router.get("/festivo/modules/create", (req, res) => {
     res.render("FestivoModule-Create");
 });
+router.get("/festivo/modules/:id", (req, res) => {
+    res.render("FestivoModule-Edit");
+});
 router.get("/festivo/superadmin", (req, res) => {
     res.render("FestivoSuperadmin");
 });
 router.get("/festivo/superadmin/create", (req, res) => {
     res.render("FestivoSuperadmin-Create");
+});
+router.get("/festivo/superadmin/:id", (req, res) => {
+    res.render("FestivoSuperadmin-Edit");
 });
 module.exports = router;
 //# sourceMappingURL=webRouter.js.map

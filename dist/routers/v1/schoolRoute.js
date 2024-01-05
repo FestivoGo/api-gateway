@@ -6,12 +6,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const Module_1 = __importDefault(require("../../models/Module"));
 const School_1 = __importDefault(require("../../models/School"));
-const SchoolModule_1 = __importDefault(require("../../models/SchoolModule"));
 const festivoController_1 = require("../../controllers/v1/festivoController");
 const router = express_1.default.Router();
 router.get("/", async (req, res) => {
     let school = await School_1.default.findAll({
         attributes: { exclude: ["createdAt", "updatedAt"] },
+        order: ["school_id"],
         include: [
             { model: Module_1.default, as: "modules", attributes: { exclude: ["createdAt", "updatedAt"] }, through: { as: "status", attributes: ["subscribed"] } }
         ]
@@ -33,31 +33,7 @@ router.get("/:id", async (req, res) => {
     res.json(school);
 });
 router.post('/', festivoController_1.CreateSchool);
-router.put("/:id", async (req, res) => {
-    let schoolId = req.params.id;
-    let school = await School_1.default.findByPk(schoolId);
-    let moduleId = req.body.moduleId || "";
-    let schoolData = req.body;
-    try {
-        if (school) {
-            let modules = await school.getModules({ where: { unique_id: moduleId } });
-            school.update(schoolData);
-            if (modules.length !== 0) {
-                modules.forEach(async (module) => {
-                    let schoolmodule = await SchoolModule_1.default.findOne({ where: { ModuleUniqueId: module.unique_id, ownerId: schoolId } });
-                    schoolmodule.update({ subscribed: true });
-                });
-                return res.send("GG");
-            }
-            return res.send(school);
-        }
-        else {
-            res.json("School not found");
-        }
-    }
-    catch (error) {
-        res.json(error);
-    }
-});
+router.put("/:id", festivoController_1.EditSchool);
+router.delete('/:id', festivoController_1.DeleteSchool);
 exports.default = router;
 //# sourceMappingURL=schoolRoute.js.map

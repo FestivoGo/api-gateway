@@ -13,12 +13,15 @@ router.get("/", async (req, res) => {
         return res.json("Module not Found");
     res.json(module);
 });
-router.get("/:module_name", async (req, res) => {
-    let module = await Module_1.default.findOne({ where: { module_name: req.params.module_name } });
+router.get("/:id", async (req, res) => {
+    const moduleId = req.params.id;
+    let module = await Module_1.default.findByPk(moduleId);
     if (!module)
         return res.json("Module not Found");
     res.json(module);
 });
 router.post('/', festivoController_1.CreateModule);
+router.put('/:id', festivoController_1.EditModule);
+router.delete('/:id', festivoController_1.DeleteModule);
 exports.default = router;
 //# sourceMappingURL=moduleRouter.js.map
