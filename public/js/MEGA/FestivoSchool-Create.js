@@ -1,19 +1,23 @@
-$("#side-module").addClass("sidelist-selected")
+$("#side-sekolah").addClass("sidelist-selected")
 
 $("#button-selesai").click(function(){
     $("#popup").removeClass("hidden")
     $(".delete-popup").removeClass("hidden")
 })
+$("#button-batal").click(function(){
+    $("#popup").addClass("hidden")
+    $(".delete-popup").addClass("hidden")
+})
 $("#confirm-popup button").click(function(){
-    window.location = "/festivo/modules"
+    window.location = "/festivo/schools"
 })
 
-$("#form-module-create").on("submit", function (e) {
+$("#form-school-create").on("submit", function (e) {
     e.preventDefault();
     const formData = new FormData(this);
   
     $.ajax({
-      url: "/api/v1/modules",
+      url: "/api/v1/schools",
       type: "POST",
       data: formData,
       contentType: false,
@@ -35,4 +39,4 @@ $("#form-module-create").on("submit", function (e) {
           });
       },
     });
-});
+  });

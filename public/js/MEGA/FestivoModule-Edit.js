@@ -1,26 +1,40 @@
-$("#side-sekolah").addClass("sidelist-selected")
+$("#side-module").addClass("sidelist-selected")
+
+let MODULE_ID = window.location.href.substring(
+    window.location.href.lastIndexOf("/") + 1
+);
 
 $("#button-selesai").click(function(){
     $("#popup").removeClass("hidden")
     $(".delete-popup").removeClass("hidden")
 })
+$("#button-batal").click(function(){
+    $("#popup").addClass("hidden")
+    $(".delete-popup").addClass("hidden")
+})
 $("#confirm-popup button").click(function(){
-    window.location = "/festivo/schools"
+    window.location = "/festivo/modules"
 })
 
-$("#form-school-create").on("submit", function (e) {
+$.get(`/api/v1/modules/${MODULE_ID}`, async (moduleData, status) => {
+    if (status == "success" && moduleData) {
+      $("input[name=module_name]").val(moduleData.module_name);
+    }
+});
+
+$("#form-module-edit").on("submit", function (e) {
     e.preventDefault();
     const formData = new FormData(this);
   
     $.ajax({
-      url: "/api/v1/schools",
-      type: "POST",
+      url: `/api/v1/modules/${MODULE_ID}`,
+      type: "PUT",
       data: formData,
       contentType: false,
       enctype: "multipart/form-data",
       processData: false,
       success: function (response) {
-        if (response.status_code == 201) {
+        if (response.status_code == 200) {
           $(".delete-popup").addClass("hidden")
           $("#confirm-popup").removeClass("hidden")
         }
@@ -35,4 +49,4 @@ $("#form-school-create").on("submit", function (e) {
           });
       },
     });
-  });
+});

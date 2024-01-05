@@ -1,26 +1,23 @@
-$("#side-superadmin").addClass("sidelist-selected")
+$("#side-module").addClass("sidelist-selected")
 
 $("#button-selesai").click(function(){
     $("#popup").removeClass("hidden")
     $(".delete-popup").removeClass("hidden")
 })
+$("#button-batal").click(function(){
+    $("#popup").addClass("hidden")
+    $(".delete-popup").addClass("hidden")
+})
 $("#confirm-popup button").click(function(){
-    window.location = "/festivo/superadmin"
+    window.location = "/festivo/modules"
 })
 
-$.get("/api/v1/schools", async (schoolData) => {
-  schoolData.forEach(school => {
-    $("#superadmin-school-select").append(`<option value="${school.school_id}">${school.school_name}</option>`)
-  })
-});
-
-$("#form-admin-create").on("submit", function (e) {
+$("#form-module-create").on("submit", function (e) {
     e.preventDefault();
     const formData = new FormData(this);
-    formData.append("role", "super_admin")
   
     $.ajax({
-      url: "/api/v1/superadmin",
+      url: "/api/v1/modules",
       type: "POST",
       data: formData,
       contentType: false,
@@ -42,4 +39,4 @@ $("#form-admin-create").on("submit", function (e) {
           });
       },
     });
-  });
+});

@@ -19,7 +19,7 @@ $.get("/api/v1/schools", async (data) => {
         data: "unique_id",
         width:"5%",
         render: function (data, type) {
-          return `<a href="/siswa/edit/${data}" class="edit-siswa"><i class="uil uil-edit text-main"></i></a>`;
+          return `<a href="/festivo/schools/${data}" class="edit-siswa"><i class="uil uil-edit text-main"></i></a>`;
         },
       },
     ],

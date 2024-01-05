@@ -5,9 +5,9 @@
   <!-- MAIN -->
   <main>
     <%- include('./layouts/MegaSidebar'); -%>
-    <section id="admin-create" class="min-h-screen bg-white rounded-tl-3xl p-8">
+    <section id="admin-edit" class="min-h-screen bg-white rounded-tl-3xl p-8">
       <p class="text-main font-bold text-2xl">Menambahkan Admin Baru <span class="text-red-500 font-medium text-xs">* harus diisi</span></p>
-      <form id="form-admin-create" class="">
+      <form id="form-admin-edit" class="">
         <div id="bg-table-admin" class="h-max shadow-[0_0px_40px_-15px_rgba(0,0,0,0.2)] w-full mt-8 rounded-3xl p-8 bg-main">
           <div class="flex flex-col gap-4">
             <label class="block flex flex-col gap-2">
@@ -35,9 +35,9 @@
                 </select>
               </label>
               <label class="block flex flex-col gap-2 w-[230px]">
-                <span class="text-white font-bold tracking-[1.4px] text-sm">Password <span class="text-red-500 font-medium text-xs">*</span></span>
+                <span class="text-white font-bold tracking-[1.4px] text-sm">Password Baru <span class="text-red-500 font-medium text-xs">*</span></span>
                 <!-- Using form state modifiers, the classes can be identical for every input -->
-                <input required type="text" placeholder="123" name="password" class="font-normal block border-0 w-full px-3 py-[10px] bg-white rounded-lg text-sm
+                <input required type="text" placeholder="Masukan Password Baru" name="password" class="font-normal block border-0 w-full px-3 py-[10px] bg-white rounded-lg text-sm
                 focus:outline-none focus:border-white-60 focus:ring-1 focus:ring-white-60
                 focus:invalid:border-pink-500 focus:invalid:ring-pink-500
                 "/>
@@ -69,4 +69,4 @@
   </main>
 </body>
 <%- include('./layouts/footer'); -%>
-<script src="/js/MEGA/FestivoSuperadmin-Create.js"></script>
+<script src="/js/MEGA/FestivoSuperadmin-Edit.js"></script>

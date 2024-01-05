@@ -24,18 +24,15 @@ $.get(`/api/v1/admins`, function (admins) {
               return meta.row + meta.settings._iDisplayStart + 1;
             },
           },
-          { data: "nuptk", 
-            width:"20%",
-            render: function(data){
-              return data
-            }
-          },
           { data: "username"},
+          { data: "nuptk"},
+          { data: "school_id"},
+          { data: "school_name"},
           {
             data: "unique_id",
             width:"5%",
             render: function (data, type) {
-              return `<a href="/admin/edit/${data}" class="edit-siswa"><i class="uil uil-edit text-main"></i></a>`;
+              return `<a href="/festivo/superadmin/${data}" class="edit-siswa"><i class="uil uil-edit text-main"></i></a>`;
             },
           },
         ],
