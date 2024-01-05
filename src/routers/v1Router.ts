@@ -7,6 +7,7 @@ import examTypeRouter from "./v1/examTypeRoute";
 import schoolRouter from "./v1/schoolRoute";
 import indexRouter from "./indexRoute";
 import moduleRouter from "./v1/moduleRouter"
+import superadminRouter from "./v1/superadminRouter"
 
 const v1Router = express.Router()
 
@@ -18,5 +19,6 @@ v1Router.use("/admins", adminRouter);
 v1Router.use("/topic", examTypeRouter);
 v1Router.use("/schools", schoolRouter);
 v1Router.use("/modules", moduleRouter);
+v1Router.use("/superadmin", superadminRouter);
 
 export default v1Router

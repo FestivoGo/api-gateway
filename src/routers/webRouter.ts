@@ -93,5 +93,31 @@ router.get("/topik/edit/:id", validateTokenWebiste, (req:Request, res:Response) 
 });
 
 
+router.get("/festivo/login", (req:Request, res:Response) => {
+  res.render("FestivoLogin");
+});
+router.get("/festivo/schools", (req:Request, res:Response) => {
+  res.render("FestivoSchool");
+});
+router.get("/festivo/schools/create", (req:Request, res:Response) => {
+  res.render("FestivoSchool-Create");
+});
+router.get("/festivo/schools/edit", (req:Request, res:Response) => {
+  res.render("FestivoSchool-Edit");
+});
+router.get("/festivo/modules", (req:Request, res:Response) => {
+  res.render("FestivoModule");
+});
+router.get("/festivo/modules/create", (req:Request, res:Response) => {
+  res.render("FestivoModule-Create");
+});
+router.get("/festivo/superadmin", (req:Request, res:Response) => {
+  res.render("FestivoSuperadmin");
+});
+router.get("/festivo/superadmin/create", (req:Request, res:Response) => {
+  res.render("FestivoSuperadmin-Create");
+});
+
+
 
 export = router;

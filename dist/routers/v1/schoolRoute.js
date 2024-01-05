@@ -7,6 +7,7 @@ const express_1 = __importDefault(require("express"));
 const Module_1 = __importDefault(require("../../models/Module"));
 const School_1 = __importDefault(require("../../models/School"));
 const SchoolModule_1 = __importDefault(require("../../models/SchoolModule"));
+const festivoController_1 = require("../../controllers/v1/festivoController");
 const router = express_1.default.Router();
 router.get("/", async (req, res) => {
     let school = await School_1.default.findAll({
@@ -31,18 +32,7 @@ router.get("/:id", async (req, res) => {
         return res.json("school not Found");
     res.json(school);
 });
-router.post('/', async (req, res) => {
-    let schoolData = req.body;
-    try {
-        let module = await Module_1.default.findAll();
-        let school = await School_1.default.create(schoolData);
-        school.setModules(module);
-        res.json(school);
-    }
-    catch (error) {
-        res.json(error);
-    }
-});
+router.post('/', festivoController_1.CreateSchool);
 router.put("/:id", async (req, res) => {
     let schoolId = req.params.id;
     let school = await School_1.default.findByPk(schoolId);

@@ -47,11 +47,11 @@ School.init(
 );
 
 School.belongsToMany(Module,{
-    through: SchoolModule,
-    as: "modules",
-    sourceKey: 'unique_id',
-    foreignKey: "ownerId",
-    constraints: false,
+  through: SchoolModule,
+  as: "modules",
+  sourceKey: 'unique_id',
+  foreignKey: "ownerId",
+  constraints: false,
 })
   
 export default School;

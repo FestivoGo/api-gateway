@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const Module_1 = __importDefault(require("../../models/Module"));
+const festivoController_1 = require("../../controllers/v1/festivoController");
 const router = express_1.default.Router();
 router.get("/", async (req, res) => {
     let module = await Module_1.default.findAll({ attributes: { exclude: ["createdAt", "updatedAt"] } });
@@ -18,16 +19,6 @@ router.get("/:module_name", async (req, res) => {
         return res.json("Module not Found");
     res.json(module);
 });
-router.post('/', async (req, res) => {
-    let moduleData = req.body;
-    try {
-        await Module_1.default.create(moduleData).then(function () {
-            res.json("SUCCESS CREATE NEW MODULE");
-        });
-    }
-    catch (error) {
-        res.json(error);
-    }
-});
+router.post('/', festivoController_1.CreateModule);
 exports.default = router;
 //# sourceMappingURL=moduleRouter.js.map

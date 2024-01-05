@@ -2,6 +2,7 @@ import express from "express"
 import { validateTokenAPI } from "../../utils/JWT";
 import Module from "../../models/Module";
 import School from "../../models/School";
+import { CreateModule } from "../../controllers/v1/festivoController";
 
 const router = express.Router()
 
@@ -17,17 +18,7 @@ router.get("/:module_name", async (req, res) => {
     res.json(module)
 });
 
-router.post('/', async (req, res) => {
-  let moduleData = req.body
-
-  try {
-    await Module.create(moduleData).then(function(){
-      res.json("SUCCESS CREATE NEW MODULE")
-    })
-  } catch (error) {
-    res.json(error)
-  }  
-});
+router.post('/', CreateModule);
 
 
 export default router;
