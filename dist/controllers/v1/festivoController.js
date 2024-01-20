@@ -3,21 +3,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DeleteSuperAdmin = exports.EditSuperAdmin = exports.CreateSuperAdmin = exports.DeleteModule = exports.EditModule = exports.CreateModule = exports.DeleteSchool = exports.EditSchool = exports.CreateSchool = exports.LoginMegaAdmin = void 0;
+exports.DeleteSuperAdmin = exports.EditSuperAdmin = exports.CreateSuperAdmin = exports.DeleteModule = exports.EditModule = exports.CreateModule = exports.ActivateSchoolModule = exports.DeactiveSchool = exports.EditSchool = exports.CreateSchool = exports.LogoutMegaAdmin = exports.LoginMegaAdmin = void 0;
 const Admin_1 = __importDefault(require("../../models/Admin"));
-const Exam_1 = __importDefault(require("../../models/Exam"));
-const ExamType_1 = __importDefault(require("../../models/ExamType"));
 const Module_1 = __importDefault(require("../../models/Module"));
 const School_1 = __importDefault(require("../../models/School"));
 const SchoolModule_1 = __importDefault(require("../../models/SchoolModule"));
 const Student_1 = __importDefault(require("../../models/Student"));
+const JWT_1 = require("../../utils/JWT");
 const response_1 = __importDefault(require("../response"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const node_cron_1 = __importDefault(require("node-cron"));
 async function LoginMegaAdmin(req, res) {
     let megaData = req.body;
     console.log(megaData);
     try {
         if (megaData.credentials == "mega") {
+            let megaToken = (0, JWT_1.generateMegaAccessToken)(megaData);
+            res.cookie("mega-token", megaToken, {
+                httpOnly: true
+            });
             return (0, response_1.default)(200, "success login", [], res);
         }
         else {
@@ -29,6 +33,11 @@ async function LoginMegaAdmin(req, res) {
     }
 }
 exports.LoginMegaAdmin = LoginMegaAdmin;
+async function LogoutMegaAdmin(req, res) {
+    res.clearCookie("mega-token");
+    res.redirect("/festivo/login");
+}
+exports.LogoutMegaAdmin = LogoutMegaAdmin;
 async function CreateSchool(req, res) {
     let schoolData = req.body;
     try {
@@ -38,7 +47,20 @@ async function CreateSchool(req, res) {
         let SCHOOL = await School_1.default.create(schoolData);
         let MODULES = await Module_1.default.findAll();
         SCHOOL.setModules(MODULES);
-        return (0, response_1.default)(201, "success create new school", [], res);
+        let superAdminData = {
+            username: `sudo${SCHOOL.school_id}`,
+            nuptk: `admin-${generateUniqueId()}`,
+            password: "123",
+            school_id: SCHOOL.school_id,
+            school_name: SCHOOL.school_name,
+            role: "super_admin"
+        };
+        await bcrypt_1.default.hash(superAdminData.password, 10).then((hash) => {
+            superAdminData.password = hash;
+            Admin_1.default.create(superAdminData).then((respon) => {
+                (0, response_1.default)(201, "success create new school", [], res);
+            });
+        });
     }
     catch (error) {
         res.json(error);
@@ -77,17 +99,16 @@ async function EditSchool(req, res) {
     }
 }
 exports.EditSchool = EditSchool;
-async function DeleteSchool(req, res) {
+async function DeactiveSchool(req, res) {
     let schoolId = req.params.id;
+    let schoolData = req.body;
     let SCHOOL = await School_1.default.findByPk(schoolId);
     try {
         if (SCHOOL) {
-            await Admin_1.default.destroy({ where: { school_id: SCHOOL.school_id } });
-            await Exam_1.default.destroy({ where: { school_id: SCHOOL.school_id } });
-            await ExamType_1.default.destroy({ where: { school_id: SCHOOL.school_id } });
-            await Student_1.default.destroy({ where: { school_id: SCHOOL.school_id } });
-            SCHOOL.destroy();
-            return (0, response_1.default)(200, "Success delete school", [], res);
+            SCHOOL.update(schoolData);
+            await Admin_1.default.update(schoolData, { where: { school_id: SCHOOL.school_id } });
+            await Student_1.default.update(schoolData, { where: { school_id: SCHOOL.school_id } });
+            return (0, response_1.default)(200, "Success update status school", [], res);
         }
         else {
             return (0, response_1.default)(400, "School not found", [], res);
@@ -97,7 +118,34 @@ async function DeleteSchool(req, res) {
         res.json(error);
     }
 }
-exports.DeleteSchool = DeleteSchool;
+exports.DeactiveSchool = DeactiveSchool;
+async function ActivateSchoolModule(req, res) {
+    let schoolmoduleId = req.params.id;
+    let schoolmoduleBody = req.body;
+    let SCHOOL_MODULE = await SchoolModule_1.default.findByPk(schoolmoduleId);
+    try {
+        if (SCHOOL_MODULE) {
+            schoolmoduleBody.subscribed = true;
+            SCHOOL_MODULE.update(schoolmoduleBody);
+            return (0, response_1.default)(200, "Success update school", [], res);
+        }
+        else {
+            return (0, response_1.default)(400, "School not found", [], res);
+        }
+    }
+    catch (error) {
+        res.json(error);
+    }
+}
+exports.ActivateSchoolModule = ActivateSchoolModule;
+node_cron_1.default.schedule("* * * * *", async function () {
+    let SCHOOL_MODULES = await SchoolModule_1.default.findAll();
+    SCHOOL_MODULES.forEach(schoolmodule => {
+        if (hitungSelisihTanggal(getTodayDate(), schoolmodule.tanggal_berakhir) == false) {
+            schoolmodule.update({ subscribed: false });
+        }
+    });
+});
 async function CreateModule(req, res) {
     let moduleData = req.body;
     try {
@@ -208,4 +256,29 @@ async function DeleteSuperAdmin(req, res) {
     }
 }
 exports.DeleteSuperAdmin = DeleteSuperAdmin;
+function generateUniqueId() {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let uniqueId = '';
+    for (let i = 0; i < 4; i++) {
+        uniqueId += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return uniqueId;
+}
+function hitungSelisihTanggal(tanggalMulai, tanggalBerakhir) {
+    const dateMulai = new Date(tanggalMulai);
+    const dateBerakhir = new Date(tanggalBerakhir);
+    if (dateBerakhir < dateMulai) {
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+function getTodayDate() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = (today.getMonth() + 1).toString().padStart(2, '0');
+    const day = today.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
 //# sourceMappingURL=festivoController.js.map
