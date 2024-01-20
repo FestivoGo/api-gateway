@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateInGameAccessToken = exports.validateTokenWebiste = exports.validateTokenAPI = exports.generateAccessToken = void 0;
+exports.validateTokenMegaWebiste = exports.generateMegaAccessToken = exports.generateInGameAccessToken = exports.validateTokenWebiste = exports.validateTokenAPI = exports.generateAccessToken = void 0;
 const jsonwebtoken_1 = require("jsonwebtoken");
 const response_1 = __importDefault(require("../controllers/response"));
 const path_1 = __importDefault(require("path"));
@@ -30,6 +30,13 @@ const generateInGameAccessToken = (user) => {
     return accessToken;
 };
 exports.generateInGameAccessToken = generateInGameAccessToken;
+const generateMegaAccessToken = (user) => {
+    const accessToken = (0, jsonwebtoken_1.sign)({
+        credentials: user.credentials,
+    }, ACCESS_TOKEN_SECRET);
+    return accessToken;
+};
+exports.generateMegaAccessToken = generateMegaAccessToken;
 const validateTokenAPI = (req, res, next) => {
     const accessToken = req.cookies["login-token"];
     if (!accessToken)
@@ -65,16 +72,15 @@ const validateTokenWebiste = (req, res, next) => {
     }
 };
 exports.validateTokenWebiste = validateTokenWebiste;
-const validateInGameTokenWebiste = (req, res, next) => {
-    const accessToken = req.cookies["login-token"];
+const validateTokenMegaWebiste = (req, res, next) => {
+    const megaToken = req.cookies["mega-token"];
     // if token expired or not login
-    if (!accessToken)
-        return res.redirect("/login");
+    if (!megaToken)
+        return res.redirect("/festivo/login");
     try {
-        (0, jsonwebtoken_1.verify)(accessToken, ACCESS_TOKEN_SECRET, function (err, user) {
+        (0, jsonwebtoken_1.verify)(megaToken, ACCESS_TOKEN_SECRET, function (err, user) {
             if (err)
                 return res.sendStatus(403);
-            req.user = user;
             next();
         });
     }
@@ -82,4 +88,5 @@ const validateInGameTokenWebiste = (req, res, next) => {
         return (0, response_1.default)(500, "server error", { error: error.message }, res);
     }
 };
+exports.validateTokenMegaWebiste = validateTokenMegaWebiste;
 //# sourceMappingURL=JWT.js.map

@@ -19,6 +19,10 @@ School.init({
     },
     school_id: sequelize_1.DataTypes.STRING,
     school_name: sequelize_1.DataTypes.STRING,
+    school_active: {
+        type: sequelize_1.DataTypes.BOOLEAN,
+        defaultValue: true
+    },
     // timestamps
     createdAt: sequelize_1.DataTypes.DATE,
     updatedAt: sequelize_1.DataTypes.DATE,

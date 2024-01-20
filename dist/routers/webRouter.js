@@ -101,31 +101,31 @@ router.get("/topik/edit/:id", JWT_1.validateTokenWebiste, (req, res) => {
 router.get("/festivo/login", (req, res) => {
     res.render("FestivoLogin");
 });
-router.get("/festivo/schools", (req, res) => {
+router.get("/festivo/schools", JWT_1.validateTokenMegaWebiste, (req, res) => {
     res.render("FestivoSchool");
 });
-router.get("/festivo/schools/create", (req, res) => {
+router.get("/festivo/schools/create", JWT_1.validateTokenMegaWebiste, (req, res) => {
     res.render("FestivoSchool-Create");
 });
-router.get("/festivo/schools/:id", (req, res) => {
+router.get("/festivo/schools/:id", JWT_1.validateTokenMegaWebiste, (req, res) => {
     res.render("FestivoSchool-Edit");
 });
-router.get("/festivo/modules", (req, res) => {
+router.get("/festivo/modules", JWT_1.validateTokenMegaWebiste, (req, res) => {
     res.render("FestivoModule");
 });
-router.get("/festivo/modules/create", (req, res) => {
+router.get("/festivo/modules/create", JWT_1.validateTokenMegaWebiste, (req, res) => {
     res.render("FestivoModule-Create");
 });
-router.get("/festivo/modules/:id", (req, res) => {
+router.get("/festivo/modules/:id", JWT_1.validateTokenMegaWebiste, (req, res) => {
     res.render("FestivoModule-Edit");
 });
-router.get("/festivo/superadmin", (req, res) => {
+router.get("/festivo/superadmin", JWT_1.validateTokenMegaWebiste, (req, res) => {
     res.render("FestivoSuperadmin");
 });
-router.get("/festivo/superadmin/create", (req, res) => {
+router.get("/festivo/superadmin/create", JWT_1.validateTokenMegaWebiste, (req, res) => {
     res.render("FestivoSuperadmin-Create");
 });
-router.get("/festivo/superadmin/:id", (req, res) => {
+router.get("/festivo/superadmin/:id", JWT_1.validateTokenMegaWebiste, (req, res) => {
     res.render("FestivoSuperadmin-Edit");
 });
 module.exports = router;

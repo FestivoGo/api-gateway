@@ -16,6 +16,14 @@ SchoolModule.init({
         type: sequelize_1.DataTypes.BOOLEAN,
         defaultValue: false
     },
+    tanggal_mulai: {
+        type: sequelize_1.DataTypes.STRING,
+        defaultValue: null
+    },
+    tanggal_berakhir: {
+        type: sequelize_1.DataTypes.STRING,
+        defaultValue: null
+    },
     // timestamps
     createdAt: sequelize_1.DataTypes.DATE,
     updatedAt: sequelize_1.DataTypes.DATE,

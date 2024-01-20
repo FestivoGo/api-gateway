@@ -13,7 +13,7 @@ router.get("/", async (req, res) => {
         attributes: { exclude: ["createdAt", "updatedAt"] },
         order: ["school_id"],
         include: [
-            { model: Module_1.default, as: "modules", attributes: { exclude: ["createdAt", "updatedAt"] }, through: { as: "status", attributes: ["subscribed"] } }
+            { model: Module_1.default, as: "modules", attributes: { exclude: ["createdAt", "updatedAt"] }, through: { as: "status", attributes: ["subscribed", "tanggal_berakhir", "tanggal_mulai", "unique_id"] } }
         ]
     });
     if (!school)
@@ -25,7 +25,7 @@ router.get("/:id", async (req, res) => {
     let school = await School_1.default.findByPk(schoolId, {
         attributes: { exclude: ["createdAt", "updatedAt"] },
         include: [
-            { model: Module_1.default, as: "modules", attributes: { exclude: ["createdAt", "updatedAt"] }, through: { as: "status", attributes: ["subscribed"] } }
+            { model: Module_1.default, as: "modules", attributes: { exclude: ["createdAt", "updatedAt"] }, through: { as: "status", attributes: ["subscribed", "tanggal_berakhir", "tanggal_mulai", "unique_id"] } }
         ]
     });
     if (!school)
@@ -34,6 +34,7 @@ router.get("/:id", async (req, res) => {
 });
 router.post('/', festivoController_1.CreateSchool);
 router.put("/:id", festivoController_1.EditSchool);
-router.delete('/:id', festivoController_1.DeleteSchool);
+router.put("/modules/:id", festivoController_1.ActivateSchoolModule);
+router.delete('/:id', festivoController_1.DeactiveSchool);
 exports.default = router;
 //# sourceMappingURL=schoolRoute.js.map
