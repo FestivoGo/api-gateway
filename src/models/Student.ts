@@ -19,6 +19,7 @@ class Student extends Model {
   declare school_id: string;
   declare school_name: string;
   declare login_status: string;
+  declare school_active: boolean;
 
   declare getExams: BelongsToManyGetAssociationsMixin<Exam>
 
@@ -49,6 +50,10 @@ Student.init(
     login_status: {
       type: DataTypes.BOOLEAN,
       defaultValue: 0,
+    },
+    school_active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
     },
 
     // timestamps

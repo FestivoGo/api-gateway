@@ -41,6 +41,16 @@ const generateInGameAccessToken = (user) => {
   return accessToken
 };
 
+const generateMegaAccessToken = (user) => {
+  const accessToken = sign(
+    {
+      credentials: user.credentials,
+    },
+    ACCESS_TOKEN_SECRET
+  );
+  return accessToken
+};
+
 const validateTokenAPI = (req:Request, res:Response, next:NextFunction) => {
   const accessToken = req.cookies["login-token"];
   if (!accessToken) return res.sendStatus(403)
@@ -70,14 +80,13 @@ const validateTokenWebiste = (req:Request, res:Response, next:NextFunction) => {
   }
 };
 
-const validateInGameTokenWebiste = (req:Request, res:Response, next:NextFunction) => {
-  const accessToken = req.cookies["login-token"];
+const validateTokenMegaWebiste = (req:Request, res:Response, next:NextFunction) => {
+  const megaToken = req.cookies["mega-token"];
   // if token expired or not login
-  if (!accessToken) return res.redirect("/login")
+  if (!megaToken) return res.redirect("/festivo/login")
   try {
-    verify(accessToken, ACCESS_TOKEN_SECRET, function(err, user){
+    verify(megaToken, ACCESS_TOKEN_SECRET, function(err, user){
       if(err) return res.sendStatus(403)
-      req.user = user
       next()
     });
   } catch (error) {
@@ -89,5 +98,7 @@ export {
   generateAccessToken,
   validateTokenAPI,
   validateTokenWebiste,
-  generateInGameAccessToken
+  generateInGameAccessToken,
+  generateMegaAccessToken,
+  validateTokenMegaWebiste
 };

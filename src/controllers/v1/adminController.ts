@@ -35,9 +35,9 @@ export async function LoginAdmin(req:Request, res:Response) {
         nuptk: nuptk,
       },
     });
-    if (admin == null) {
-      return res.status(404).json({ error: "User not found" });
-    }
+    if (admin == null) return res.status(404).json({ error: "User not found" });
+    if (admin.school_active == false) return res.status(400).json({error: "Your school is in-active"})
+
     const dbPassword = admin.password;
     bcrypt.compare(password, dbPassword).then((match) => {
       if (!match) {

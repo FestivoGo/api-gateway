@@ -1,5 +1,5 @@
 import express, {Response, Request} from "express";
-import { validateTokenWebiste } from "../utils/JWT";
+import { validateTokenMegaWebiste, validateTokenWebiste } from "../utils/JWT";
 
 const router = express.Router();
 
@@ -96,31 +96,31 @@ router.get("/topik/edit/:id", validateTokenWebiste, (req:Request, res:Response) 
 router.get("/festivo/login", (req:Request, res:Response) => {
   res.render("FestivoLogin");
 });
-router.get("/festivo/schools", (req:Request, res:Response) => {
+router.get("/festivo/schools",validateTokenMegaWebiste, (req:Request, res:Response) => {
   res.render("FestivoSchool");
 });
-router.get("/festivo/schools/create", (req:Request, res:Response) => {
+router.get("/festivo/schools/create",validateTokenMegaWebiste, (req:Request, res:Response) => {
   res.render("FestivoSchool-Create");
 });
-router.get("/festivo/schools/:id", (req:Request, res:Response) => {
+router.get("/festivo/schools/:id",validateTokenMegaWebiste, (req:Request, res:Response) => {
   res.render("FestivoSchool-Edit");
 });
-router.get("/festivo/modules", (req:Request, res:Response) => {
+router.get("/festivo/modules",validateTokenMegaWebiste, (req:Request, res:Response) => {
   res.render("FestivoModule");
 });
-router.get("/festivo/modules/create", (req:Request, res:Response) => {
+router.get("/festivo/modules/create",validateTokenMegaWebiste, (req:Request, res:Response) => {
   res.render("FestivoModule-Create");
 });
-router.get("/festivo/modules/:id", (req:Request, res:Response) => {
+router.get("/festivo/modules/:id",validateTokenMegaWebiste, (req:Request, res:Response) => {
   res.render("FestivoModule-Edit");
 });
-router.get("/festivo/superadmin", (req:Request, res:Response) => {
+router.get("/festivo/superadmin",validateTokenMegaWebiste, (req:Request, res:Response) => {
   res.render("FestivoSuperadmin");
 });
-router.get("/festivo/superadmin/create", (req:Request, res:Response) => {
+router.get("/festivo/superadmin/create",validateTokenMegaWebiste, (req:Request, res:Response) => {
   res.render("FestivoSuperadmin-Create");
 });
-router.get("/festivo/superadmin/:id", (req:Request, res:Response) => {
+router.get("/festivo/superadmin/:id",validateTokenMegaWebiste, (req:Request, res:Response) => {
   res.render("FestivoSuperadmin-Edit");
 });
 

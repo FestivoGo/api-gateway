@@ -3,7 +3,7 @@ import { validateTokenAPI } from "../../utils/JWT";
 import Module from "../../models/Module";
 import School from "../../models/School";
 import SchoolModule from "../../models/SchoolModule";
-import { CreateSchool, DeleteSchool, EditSchool } from "../../controllers/v1/festivoController";
+import { ActivateSchoolModule, CreateSchool, DeactiveSchool, EditSchool } from "../../controllers/v1/festivoController";
 
 const router = express.Router()
 
@@ -12,7 +12,7 @@ router.get("/", async (req, res) => {
     attributes:{exclude:["createdAt", "updatedAt"]},
     order: ["school_id"],
     include:[
-      {model: Module, as: "modules", attributes:{exclude:["createdAt", "updatedAt"]}, through:{as:"status",attributes:["subscribed"]}}
+      {model: Module, as: "modules", attributes:{exclude:["createdAt", "updatedAt"]}, through:{as:"status",attributes:["subscribed","tanggal_berakhir","tanggal_mulai", "unique_id"]}}
     ]
   })
   if(!school) return res.json("school not Found")
@@ -24,7 +24,7 @@ router.get("/:id", async (req, res) => {
   let school = await School.findByPk(schoolId,{
     attributes:{exclude:["createdAt", "updatedAt"]},
     include:[
-      {model: Module, as: "modules", attributes:{exclude:["createdAt", "updatedAt"]}, through:{as:"status",attributes:["subscribed"]}}
+      {model: Module, as: "modules", attributes:{exclude:["createdAt", "updatedAt"]}, through:{as:"status",attributes:["subscribed","tanggal_berakhir","tanggal_mulai", "unique_id"]}}
     ]
   })
   if(!school) return res.json("school not Found")
@@ -32,7 +32,8 @@ router.get("/:id", async (req, res) => {
 });
 router.post('/', CreateSchool);
 router.put("/:id", EditSchool)
-router.delete('/:id', DeleteSchool);
+router.put("/modules/:id", ActivateSchoolModule)
+router.delete('/:id', DeactiveSchool);
 
 
 export default router;
