@@ -9,8 +9,9 @@ import SchoolModule from "./SchoolModule";
 
 class School extends Model {
   declare unique_id: CreationOptional<number>;
-  school_id: string;
-  school_name: string;
+  declare school_id: string;
+  declare school_name: string;
+  declare school_active: boolean;
 
 
   declare getModules: BelongsToManyGetAssociationsMixin<Module>;
@@ -35,6 +36,10 @@ School.init(
     },
     school_id: DataTypes.STRING,
     school_name: DataTypes.STRING,
+    school_active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
+    },
 
     // timestamps
     createdAt: DataTypes.DATE,

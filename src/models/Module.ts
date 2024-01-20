@@ -9,7 +9,6 @@ import School from "./School";
 class Module extends Model {
   declare unique_id: CreationOptional<number>;
   module_name: string;
-  subscribed: string;
 
   declare ownerId: ForeignKey<School['unique_id']>;
 

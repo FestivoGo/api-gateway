@@ -15,6 +15,13 @@ $.get("/api/v1/schools", async (data) => {
       },
       { data: "school_id" },
       { data: "school_name" },
+      { 
+        data: "school_active" ,
+        width: "15%",
+        render: function(data){
+          return data ? `<p class="text-green-500 font-bold">ACTIVE</p>` : `<p class="text-red-500 font-bold">IN-ACTIVE</p>`
+        }  
+      },
       {
         data: "unique_id",
         width:"5%",

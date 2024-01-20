@@ -5,8 +5,10 @@ import Module from "../../models/Module";
 import School from "../../models/School";
 import SchoolModule from "../../models/SchoolModule";
 import Student from "../../models/Student";
+import { generateMegaAccessToken } from "../../utils/JWT";
 import response from "../response";
 import bcrypt from "bcrypt"
+import cron from "node-cron"
 
 
 
@@ -16,6 +18,10 @@ export async function LoginMegaAdmin(req, res) {
     
     try {
         if(megaData.credentials == "mega"){
+          let megaToken = generateMegaAccessToken(megaData)
+          res.cookie("mega-token", megaToken, {
+            httpOnly: true
+          });
           return response(200, "success login", [], res)
         }else{
           return response(400, "Wrong Credentials", [], res)
@@ -23,6 +29,10 @@ export async function LoginMegaAdmin(req, res) {
     } catch (error) {
         res.json(error)
     }  
+}
+export async function LogoutMegaAdmin(req, res) {
+  res.clearCookie("mega-token");
+  res.redirect("/festivo/login");
 }
 
 export async function CreateSchool(req, res) {
@@ -35,7 +45,21 @@ export async function CreateSchool(req, res) {
         let SCHOOL = await School.create(schoolData)
         let MODULES = await Module.findAll()
         SCHOOL.setModules(MODULES)
-        return response(201, "success create new school", [], res)
+
+        let superAdminData = {
+          username: `sudo${SCHOOL.school_id}`,
+          nuptk: `admin-${generateUniqueId()}`,
+          password: "123",
+          school_id: SCHOOL.school_id,
+          school_name: SCHOOL.school_name,
+          role: "super_admin"
+        }
+        await bcrypt.hash(superAdminData.password, 10).then((hash) => {
+          superAdminData.password = hash
+          Admin.create(superAdminData).then((respon) => {
+            response(201, "success create new school", [], res);
+          });
+        });
     } catch (error) {
         res.json(error)
     }  
@@ -70,17 +94,16 @@ export async function EditSchool(req, res) {
     res.json(error)
   }
 }
-export async function DeleteSchool(req, res) {
+export async function DeactiveSchool(req, res) {
   let schoolId = req.params.id
+  let schoolData = req.body
   let SCHOOL = await School.findByPk(schoolId)
   try {
     if(SCHOOL){
-      await Admin.destroy({where:{school_id:SCHOOL.school_id}})
-      await Exam.destroy({where:{school_id:SCHOOL.school_id}})
-      await ExamType.destroy({where:{school_id:SCHOOL.school_id}})
-      await Student.destroy({where:{school_id:SCHOOL.school_id}})
-      SCHOOL.destroy()
-      return response(200, "Success delete school", [], res)
+      SCHOOL.update(schoolData)
+      await Admin.update(schoolData, {where:{school_id: SCHOOL.school_id}})
+      await Student.update(schoolData, {where:{school_id: SCHOOL.school_id}})
+      return response(200, "Success update status school", [], res)
     }else{
       return response(400, "School not found", [], res)
     }
@@ -88,6 +111,32 @@ export async function DeleteSchool(req, res) {
     res.json(error)
   }
 }
+export async function ActivateSchoolModule(req, res) {
+  let schoolmoduleId = req.params.id
+  let schoolmoduleBody = req.body
+  let SCHOOL_MODULE = await SchoolModule.findByPk(schoolmoduleId)
+  try {
+    if(SCHOOL_MODULE){
+      schoolmoduleBody.subscribed = true
+      SCHOOL_MODULE.update(schoolmoduleBody)
+      return response(200, "Success update school", [], res)
+    }else{
+      return response(400, "School not found", [], res)
+    }
+  } catch (error) {
+    res.json(error)
+  }
+}
+
+cron.schedule("* * * * *", async function(){
+  let SCHOOL_MODULES = await SchoolModule.findAll()
+  SCHOOL_MODULES.forEach(schoolmodule => {
+    if(hitungSelisihTanggal(getTodayDate(), schoolmodule.tanggal_berakhir) == false){
+      schoolmodule.update({subscribed: false})
+    }
+  })
+})
+
 
 export async function CreateModule(req, res) {
     let moduleData = req.body
@@ -188,4 +237,37 @@ export async function DeleteSuperAdmin(req, res) {
     response(500,"server failed to create new user",{ error: error.message },res
     );
   }
+}
+
+
+
+function generateUniqueId() {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let uniqueId = '';
+
+  for (let i = 0; i < 4; i++) {
+    uniqueId += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+
+  return uniqueId;
+}
+
+function hitungSelisihTanggal(tanggalMulai, tanggalBerakhir) {
+  const dateMulai = new Date(tanggalMulai);
+  const dateBerakhir = new Date(tanggalBerakhir);
+
+  if (dateBerakhir < dateMulai) {
+    return false;
+  }else{
+    return true
+  }
+}
+
+function getTodayDate() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = (today.getMonth() + 1).toString().padStart(2, '0');
+  const day = today.getDate().toString().padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
 }

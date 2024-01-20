@@ -8,7 +8,8 @@ $.get(`/api/v1/admins`, function (admins) {
         url: "/api/v1/admins",
         dataSrc: function (response) {
           return response.datas.filter((res) => {
-            return res.role == "super_admin";
+            console.log(res.school_active);
+            return res.role == "super_admin" && res.school_active == true;
           });
         },
       },

@@ -16,6 +16,7 @@ class Admin extends Model {
   declare school_id: string;
   declare school_name: string;
   declare login_status: boolean;
+  declare school_active: boolean;
 
   // createdAt can be undefined during creation
   declare createdAt: CreationOptional<Date>;
@@ -43,6 +44,10 @@ Admin.init(
     login_status: {
       type: DataTypes.BOOLEAN,
       defaultValue: 0,
+    },
+    school_active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
     },
 
     // timestamps

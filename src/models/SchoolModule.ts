@@ -8,6 +8,8 @@ import { DataTypes, Model,Association, HasManyAddAssociationMixin, HasManyCountA
   class SchoolModule extends Model {
     declare unique_id: CreationOptional<number>;
     declare subscribed: boolean;
+    declare tanggal_mulai: string;
+    declare tanggal_berakhir: string;
   
     // createdAt can be undefined during creation
     declare createdAt: CreationOptional<Date>;
@@ -27,6 +29,14 @@ import { DataTypes, Model,Association, HasManyAddAssociationMixin, HasManyCountA
       subscribed: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
+      },
+      tanggal_mulai: {
+        type: DataTypes.STRING,
+        defaultValue: null
+      },
+      tanggal_berakhir: {
+        type: DataTypes.STRING,
+        defaultValue: null
       },
   
       // timestamps
