@@ -1,11 +1,86 @@
-import express from "express";
+import express, {Response, Request, NextFunction} from "express";
 import fs from "fs"
 import path from "path";
 import multer from 'multer';
 import cookieParser from "cookie-parser"
 import cors from "cors"
 import helmet from 'helmet';
+import passport from "passport";
+import dotenv from "dotenv"
+import {Strategy as GoogleStrategy} from "passport-google-oauth20"
+import Player from "./models/Player";
+dotenv.config();
+
 const app = express();
+
+
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: `/api/v1/player/auth/google/callback`,
+}, async (accessToken, refreshToken, profile, done) => {
+  // Lakukan sesuatu dengan data profil pengguna, seperti menyimpan di database
+  const email = profile.emails![0].value;
+
+  if (!email) throw new Error('Login failed');
+
+  const existingPlayer = await Player.findOne({where: {email}});
+  
+  if(existingPlayer){
+    // const accessToken = createToken(existingUser);
+    // Object.assign(profile, {accessToken})
+    console.log("Profile Exist");
+    console.log(profile);
+    
+    
+    return done(null, profile);
+  }else{
+    // let SEEKER = await Seeker.create({
+    //   first_name: profile.name.givenName,
+    //   last_name: profile.name.familyName,
+    //   email: profile.emails![0].value,
+    //   profile_picture: profile.photos[0].value,
+    //   role: "seeker"
+    // })
+    // const accessToken = createToken(SEEKER);
+    // Object.assign(profile, {accessToken})
+    console.log("Profile doesnt exist");
+    console.log(profile);
+    
+    
+    return done(null, profile);
+  }
+}));
+
+app.use(passport.initialize());
+
+app.get('/api/v1/player/auth/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] })
+);
+
+app.get('/api/v1/player/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/' , session: false}),
+  (req:Request, res: Response) => {
+    // Di sini, Anda dapat mengarahkan pengguna atau melakukan sesuatu setelah otentikasi sukses
+    res.redirect("/protected")
+  }
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 const cspOptions = {
@@ -82,14 +157,11 @@ app.set("views", path.join(__dirname, "../views"));
 import { connectToDatabase } from "./models";
 import webRouter from "./routers/webRouter";
 import v1Router from './routers/v1Router';
-import Metric from "./models/Metric";
 
-let PORT = process.env.PORT || 3000;
+let PORT = process.env.PORT || 8000;
 
 connectToDatabase()
   .then(async() => {
-    const METRIC = await Metric.findOne()
-    if(!METRIC) await Metric.create()
     app.use("/", webRouter);
     app.use("/api/v1", v1Router);
     app.all("*", (req, res, next) => {

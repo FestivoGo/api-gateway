@@ -5,10 +5,9 @@ import { DataTypes, Model,Association, HasManyAddAssociationMixin, HasManyCountA
   Sequelize, InferAttributes, InferCreationAttributes, CreationOptional, NonAttribute, ForeignKey, HasOneCreateAssociationMixin, HasOneGetAssociationMixin, HasOneSetAssociationMixin, } from "sequelize";
 import { sequelize } from "."; // Pastikan Anda mengganti path sesuai dengan struktur direktori Anda
 
-class Admin extends Model {
+class Player extends Model {
   declare unique_id: CreationOptional<number>;
   declare username: string;
-  declare password: string;
   declare role: string;
   declare email: string;
   declare nuptk: string;
@@ -24,7 +23,7 @@ class Admin extends Model {
   declare updatedAt: CreationOptional<Date>;
 }
 
-Admin.init(
+Player.init(
   {
     unique_id: {
       type: DataTypes.UUID,
@@ -34,7 +33,6 @@ Admin.init(
       unique: true,
     },
     username: DataTypes.STRING,
-    password: DataTypes.STRING,
     role: DataTypes.STRING,
     email: DataTypes.STRING,
     nuptk: DataTypes.STRING,
@@ -55,9 +53,9 @@ Admin.init(
     updatedAt: DataTypes.DATE,
   },
   {
-    tableName: "admin", // Nama tabel di database
+    tableName: "player", // Nama tabel di database
     sequelize, // Instance Sequelize yang digunakan
   }
 );
 
-export default Admin;
+export default Player;
