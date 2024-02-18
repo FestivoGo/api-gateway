@@ -9,6 +9,7 @@ import passport from "passport";
 import dotenv from "dotenv"
 import {Strategy as GoogleStrategy} from "passport-google-oauth20"
 import Player from "./models/Player";
+
 dotenv.config();
 
 const app = express();
@@ -17,54 +18,37 @@ const app = express();
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: `/api/v1/player/auth/google/callback`,
+  callbackURL: `/api/v1/players/auth/google/callback`,
 }, async (accessToken, refreshToken, profile, done) => {
   // Lakukan sesuatu dengan data profil pengguna, seperti menyimpan di database
   const email = profile.emails![0].value;
 
   if (!email) throw new Error('Login failed');
 
-  const existingPlayer = await Player.findOne({where: {email}});
+  const existingPlayer = await Player.findOne({where: {email: email}, attributes:{exclude:["createdAt", "updatedAt"]}, raw:true});
   
   if(existingPlayer){
-    // const accessToken = createToken(existingUser);
-    // Object.assign(profile, {accessToken})
-    console.log("Profile Exist");
-    console.log(profile);
-    
-    
-    return done(null, profile);
+    const accessToken = createToken(existingPlayer);
+    Object.assign(existingPlayer, {accessToken})
+    return done(null, existingPlayer);
   }else{
-    // let SEEKER = await Seeker.create({
-    //   first_name: profile.name.givenName,
-    //   last_name: profile.name.familyName,
-    //   email: profile.emails![0].value,
-    //   profile_picture: profile.photos[0].value,
-    //   role: "seeker"
-    // })
-    // const accessToken = createToken(SEEKER);
-    // Object.assign(profile, {accessToken})
-    console.log("Profile doesnt exist");
-    console.log(profile);
+    let PLAYER = await Player.create({
+      username: profile.displayName,
+      email: profile.emails![0].value,
+      profile_picture: profile.photos[0].value,
+    })
+    const findPlayer = await Player.findByPk(PLAYER.id,{attributes:{exclude:["createdAt", "updatedAt"]}, raw:true});
+    const accessToken = createToken(findPlayer);
+    Object.assign(findPlayer, {accessToken})
+
+    console.log(findPlayer);
     
     
-    return done(null, profile);
+    return done(null, findPlayer);
   }
 }));
 
 app.use(passport.initialize());
-
-app.get('/api/v1/player/auth/google',
-  passport.authenticate('google', { scope: ['profile', 'email'] })
-);
-
-app.get('/api/v1/player/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: '/' , session: false}),
-  (req:Request, res: Response) => {
-    // Di sini, Anda dapat mengarahkan pengguna atau melakukan sesuatu setelah otentikasi sukses
-    res.redirect("/protected")
-  }
-);
 
 
 
@@ -157,6 +141,7 @@ app.set("views", path.join(__dirname, "../views"));
 import { connectToDatabase } from "./models";
 import webRouter from "./routers/webRouter";
 import v1Router from './routers/v1Router';
+import { createToken } from "./utils/JWT";
 
 let PORT = process.env.PORT || 8000;
 

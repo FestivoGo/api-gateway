@@ -4,18 +4,17 @@ import { DataTypes, Model,Association, HasManyAddAssociationMixin, HasManyCountA
   HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, ModelDefined, Optional,
   Sequelize, InferAttributes, InferCreationAttributes, CreationOptional, NonAttribute, ForeignKey, HasOneCreateAssociationMixin, HasOneGetAssociationMixin, HasOneSetAssociationMixin, } from "sequelize";
 import { sequelize } from "."; // Pastikan Anda mengganti path sesuai dengan struktur direktori Anda
+import Character from "./Character";
+import Emoticon from "./Emoticon";
+import Chat from "./Chat";
+import Reaction from "./Reaction";
 
 class Player extends Model {
-  declare unique_id: CreationOptional<number>;
+  declare id: CreationOptional<number>;
   declare username: string;
-  declare role: string;
-  declare email: string;
-  declare nuptk: string;
-  declare gender: string;
-  declare school_id: string;
-  declare school_name: string;
-  declare login_status: boolean;
-  declare school_active: boolean;
+  declare nur: number;
+  declare dinar_raya: number;
+  declare premium: boolean;
 
   // createdAt can be undefined during creation
   declare createdAt: CreationOptional<Date>;
@@ -25,27 +24,26 @@ class Player extends Model {
 
 Player.init(
   {
-    unique_id: {
+    id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,
       unique: true,
     },
-    username: DataTypes.STRING,
-    role: DataTypes.STRING,
     email: DataTypes.STRING,
-    nuptk: DataTypes.STRING,
-    gender: DataTypes.STRING,
-    school_id: DataTypes.STRING,
-    school_name: DataTypes.STRING,
-    login_status: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: 0,
+    username: DataTypes.STRING,
+    nur: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0
     },
-    school_active: {
+    dinar_raya: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0
+    },
+    premium: {
       type: DataTypes.BOOLEAN,
-      defaultValue: true
+      defaultValue: false
     },
 
     // timestamps
@@ -57,5 +55,36 @@ Player.init(
     sequelize, // Instance Sequelize yang digunakan
   }
 );
+
+Player.belongsToMany(Character, {
+  sourceKey: 'id',
+  as: 'characters', // this determines the name in `associations`!
+  constraints:false,
+  through: "PlayerCharacter"
+})
+Player.belongsToMany(Emoticon, {
+  sourceKey: 'id',
+  as: 'emoticons', // this determines the name in `associations`!
+  constraints:false,
+  through: "PlayerEmoticons"
+})
+Player.belongsToMany(Chat, {
+  sourceKey: 'id',
+  as: 'chats', // this determines the name in `associations`!
+  constraints:false,
+  through: "PlayerChats"
+})
+Player.belongsToMany(Reaction, {
+  sourceKey: 'id',
+  as: 'reactions', // this determines the name in `associations`!
+  constraints:false,
+  through: "PlayerReactions"
+})
+Player.belongsToMany(Player, {
+  sourceKey: 'id',
+  as: 'friends', // this determines the name in `associations`!
+  constraints:false,
+  through: "PlayerFriends"
+})
 
 export default Player;

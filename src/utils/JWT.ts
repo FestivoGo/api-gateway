@@ -14,6 +14,16 @@ declare module 'express' {
 
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || "SECRET"
 
+const createToken = (user) => {
+  const accessToken = sign(
+    {
+      id: user.id,
+    },
+    ACCESS_TOKEN_SECRET
+  );
+  return accessToken;
+};
+
 const generateAccessToken = (user) => {
   const accessToken = sign(
     {
@@ -96,6 +106,7 @@ const validateTokenMegaWebiste = (req:Request, res:Response, next:NextFunction) 
 
 export {
   generateAccessToken,
+  createToken,
   validateTokenAPI,
   validateTokenWebiste,
   generateInGameAccessToken,
