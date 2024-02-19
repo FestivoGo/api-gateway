@@ -18,7 +18,7 @@ const app = express();
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: `/api/v1/players/auth/google/callback`,
+  callbackURL: `muslim-raya/v1/players/auth/google/callback`,
 }, async (accessToken, refreshToken, profile, done) => {
   // Lakukan sesuatu dengan data profil pengguna, seperti menyimpan di database
   const email = profile.emails![0].value;
@@ -40,10 +40,6 @@ passport.use(new GoogleStrategy({
     const findPlayer = await Player.findByPk(PLAYER.id,{attributes:{exclude:["createdAt", "updatedAt"]}, raw:true});
     const accessToken = createToken(findPlayer);
     Object.assign(findPlayer, {accessToken})
-
-    console.log(findPlayer);
-    
-    
     return done(null, findPlayer);
   }
 }));
@@ -148,7 +144,7 @@ let PORT = process.env.PORT || 8000;
 connectToDatabase()
   .then(async() => {
     app.use("/", webRouter);
-    app.use("/api/v1", v1Router);
+    app.use("/muslim-raya/v1", v1Router);
     app.all("*", (req, res, next) => {
       const err = new Error(`can't find ${req.originalUrl} on the server!`);
       next(err);

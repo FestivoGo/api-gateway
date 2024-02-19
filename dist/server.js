@@ -10,7 +10,40 @@ const multer_1 = __importDefault(require("multer"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cors_1 = __importDefault(require("cors"));
 const helmet_1 = __importDefault(require("helmet"));
+const passport_1 = __importDefault(require("passport"));
+const dotenv_1 = __importDefault(require("dotenv"));
+const passport_google_oauth20_1 = require("passport-google-oauth20");
+const Player_1 = __importDefault(require("./models/Player"));
+dotenv_1.default.config();
 const app = (0, express_1.default)();
+passport_1.default.use(new passport_google_oauth20_1.Strategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: `muslim-raya/v1/players/auth/google/callback`,
+}, async (accessToken, refreshToken, profile, done) => {
+    // Lakukan sesuatu dengan data profil pengguna, seperti menyimpan di database
+    const email = profile.emails[0].value;
+    if (!email)
+        throw new Error('Login failed');
+    const existingPlayer = await Player_1.default.findOne({ where: { email: email }, attributes: { exclude: ["createdAt", "updatedAt"] }, raw: true });
+    if (existingPlayer) {
+        const accessToken = (0, JWT_1.createToken)(existingPlayer);
+        Object.assign(existingPlayer, { accessToken });
+        return done(null, existingPlayer);
+    }
+    else {
+        let PLAYER = await Player_1.default.create({
+            username: profile.displayName,
+            email: profile.emails[0].value,
+            profile_picture: profile.photos[0].value,
+        });
+        const findPlayer = await Player_1.default.findByPk(PLAYER.id, { attributes: { exclude: ["createdAt", "updatedAt"] }, raw: true });
+        const accessToken = (0, JWT_1.createToken)(findPlayer);
+        Object.assign(findPlayer, { accessToken });
+        return done(null, findPlayer);
+    }
+}));
+app.use(passport_1.default.initialize());
 const cspOptions = {
     directives: {
         defaultSrc: ["'self'"],
@@ -73,15 +106,12 @@ app.set("views", path_1.default.join(__dirname, "../views"));
 const models_1 = require("./models");
 const webRouter_1 = __importDefault(require("./routers/webRouter"));
 const v1Router_1 = __importDefault(require("./routers/v1Router"));
-const Metric_1 = __importDefault(require("./models/Metric"));
-let PORT = process.env.PORT || 3000;
+const JWT_1 = require("./utils/JWT");
+let PORT = process.env.PORT || 8000;
 (0, models_1.connectToDatabase)()
     .then(async () => {
-    const METRIC = await Metric_1.default.findOne();
-    if (!METRIC)
-        await Metric_1.default.create();
     app.use("/", webRouter_1.default);
-    app.use("/api/v1", v1Router_1.default);
+    app.use("/muslim-raya/v1", v1Router_1.default);
     app.all("*", (req, res, next) => {
         const err = new Error(`can't find ${req.originalUrl} on the server!`);
         next(err);

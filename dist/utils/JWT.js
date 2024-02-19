@@ -3,12 +3,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateTokenMegaWebiste = exports.generateMegaAccessToken = exports.generateInGameAccessToken = exports.validateTokenWebiste = exports.validateTokenAPI = exports.generateAccessToken = void 0;
+exports.validateTokenMegaWebiste = exports.generateMegaAccessToken = exports.generateInGameAccessToken = exports.validateTokenWebiste = exports.validateTokenAPI = exports.createToken = exports.generateAccessToken = void 0;
 const jsonwebtoken_1 = require("jsonwebtoken");
 const response_1 = __importDefault(require("../controllers/response"));
 const path_1 = __importDefault(require("path"));
 require("dotenv").config({ path: path_1.default.resolve(__dirname + "/./../../.env") });
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || "SECRET";
+const createToken = (user) => {
+    const accessToken = (0, jsonwebtoken_1.sign)({
+        id: user.id,
+    }, ACCESS_TOKEN_SECRET);
+    return accessToken;
+};
+exports.createToken = createToken;
 const generateAccessToken = (user) => {
     const accessToken = (0, jsonwebtoken_1.sign)({
         id: user.unique_id,
