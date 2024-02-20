@@ -45,7 +45,7 @@ else {
         host: "127.0.0.1",
         username: "root",
         password: "181001",
-        database: "muslim-raya",
+        database: "api-gateway",
         logging: false,
     });
 }

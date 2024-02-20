@@ -1,0 +1,40 @@
+<%- include('./layouts/header'); -%>
+
+<p class="font-bold text-center text-2xl mt-10">API MUSLIM-RAYA</p>
+<div class="grid grid-cols-3">
+    <div class="m-5 p-5 rounded-lg border-2 border-slate-900 flex flex-col justify-between min-h-[200px]">
+        <div class="">
+            <p class="font-bold">Login With Google</p>
+            <p class="text-sm mt-2">METHOD: GET</p>
+            <p class="text-sm">URL: https://api.festivo.co/muslim-raya/v1/players/auth/google</p>
+        </div>
+        <a href="/muslim-raya/v1/players/auth/google" class="mt-auto mt-4">
+            <button class="border border-slate-900 rounded-lg px-4 py-2.5">Login with Google</button>
+        </a>
+    </div>
+    <div class="m-5 p-5 rounded-lg border-2 border-slate-900 flex flex-col justify-between min-h-[200px]">
+        <div>
+            <p class="font-bold">Get All Players</p>
+            <p class="text-sm mt-2">METHOD: GET</p>
+            <p class="text-sm">URL: https://api.festivo.co/muslim-raya/v1/players/</p>
+        </div>
+        <a href="https://api.festivo.co/muslim-raya/v1/players/" class="border border-slate-900 rounded-lg px-4 py-2.5 w-max mt-4">Kunjungi Link</a>
+    </div>
+    <div class="m-5 p-5 rounded-lg border-2 border-slate-900 flex flex-col justify-between min-h-[200px]">
+        <div>
+            <p class="font-bold">Get Player By Id</p>
+            <p class="text-sm mt-2">METHOD: GET</p>
+            <p class="text-sm">URL: https://api.festivo.co/muslim-raya/v1/players/<span style="color: red;">{Id}</span></p>
+        </div>
+        <a href="https://api.festivo.co/muslim-raya/v1/players/123" class="border border-slate-900 rounded-lg px-4 py-2.5 w-max mt-4">Kunjungi Link</a>
+    </div>
+    <div class="m-5 p-5 rounded-lg border-2 border-slate-900 flex flex-col justify-between min-h-[200px]">
+        <div>
+            <p class="font-bold">Update By Id</p>
+            <p class="text-sm mt-2">METHOD: PUT</p>
+            <p class="text-sm">URL: https://api.festivo.co/muslim-raya/v1/players/<span style="color: red;">{Id}</span></p>
+        </div>
+    </div>
+</div>
+
+<%- include('./layouts/footer'); -%>

@@ -3,8 +3,8 @@ import { validateTokenMegaWebiste, validateTokenWebiste } from "../utils/JWT";
 
 const router = express.Router();
 
-router.get("/", (req:Request, res:Response) => {
-  res.render("TestPage");
+router.get("/muslim-raya", (req:Request, res:Response) => {
+  res.render("Muslim-Raya");
 });
 router.get("/protected", (req:Request, res:Response) => {
   res.render("ProtectedPage");

@@ -4,8 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
-router.get("/", (req, res) => {
-    res.render("TestPage");
+router.get("/muslim-raya", (req, res) => {
+    res.render("Muslim-Raya");
 });
 router.get("/protected", (req, res) => {
     res.render("ProtectedPage");
