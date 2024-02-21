@@ -18,7 +18,7 @@ const app = express();
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: `muslim-raya/v1/players/auth/google/callback`,
+  callbackURL: `/muslim-raya/v1/players/auth/google/callback`,
 }, async (accessToken, refreshToken, profile, done) => {
   // Lakukan sesuatu dengan data profil pengguna, seperti menyimpan di database
   const email = profile.emails![0].value;
