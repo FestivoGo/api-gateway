@@ -60,8 +60,13 @@ export const UpdatePlayerDataByID = async (req: Request, res: Response) => {
 export const CreateNewPlayer = async (req: Request, res: Response) => {
   const playerData = req.body
   try {
-    const findPlayer = await Player.create(playerData)
-    response(201, "success membuat player baru", findPlayer, res)
+    const findPlayer = await Player.findOne({where: {email: playerData.email}})
+    if(findPlayer) {
+      response(200, "success login player", findPlayer, res)
+    }else{
+      const createPlayer = await Player.create(playerData)
+      response(201, "success membuat player baru", createPlayer, res)
+    }
   } catch (error) {
       console.error("Gagal membuat player baru:", error);
       res.status(500).json({ error: error.message });

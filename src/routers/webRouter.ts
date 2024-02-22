@@ -9,9 +9,6 @@ router.get("/", (req:Request, res:Response) => {
 router.get("/muslim-raya", (req:Request, res:Response) => {
   res.render("Muslim-Raya");
 });
-router.get("/protected", (req:Request, res:Response) => {
-  res.render("ProtectedPage");
-});
 
 
 

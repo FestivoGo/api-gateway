@@ -10,8 +10,5 @@ router.get("/", (req, res) => {
 router.get("/muslim-raya", (req, res) => {
     res.render("Muslim-Raya");
 });
-router.get("/protected", (req, res) => {
-    res.render("ProtectedPage");
-});
 module.exports = router;
 //# sourceMappingURL=webRouter.js.map
