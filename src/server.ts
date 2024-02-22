@@ -5,63 +5,11 @@ import multer from 'multer';
 import cookieParser from "cookie-parser"
 import cors from "cors"
 import helmet from 'helmet';
-import passport from "passport";
 import dotenv from "dotenv"
-import {Strategy as GoogleStrategy} from "passport-google-oauth20"
-import Player from "./models/Player";
 
 dotenv.config();
 
 const app = express();
-
-
-passport.use(new GoogleStrategy({
-  clientID: process.env.GOOGLE_CLIENT_ID,
-  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: `/muslim-raya/v1/players/auth/google/callback`,
-}, async (accessToken, refreshToken, profile, done) => {
-  // Lakukan sesuatu dengan data profil pengguna, seperti menyimpan di database
-  const email = profile.emails![0].value;
-
-  if (!email) throw new Error('Login failed');
-
-  const existingPlayer = await Player.findOne({where: {email: email}, attributes:{exclude:["createdAt", "updatedAt"]}, raw:true});
-  
-  if(existingPlayer){
-    const accessToken = createToken(existingPlayer);
-    Object.assign(existingPlayer, {accessToken})
-    return done(null, existingPlayer);
-  }else{
-    let PLAYER = await Player.create({
-      username: profile.displayName,
-      email: profile.emails![0].value,
-      profile_picture: profile.photos[0].value,
-    })
-    const findPlayer = await Player.findByPk(PLAYER.id,{attributes:{exclude:["createdAt", "updatedAt"]}, raw:true});
-    const accessToken = createToken(findPlayer);
-    Object.assign(findPlayer, {accessToken})
-    return done(null, findPlayer);
-  }
-}));
-
-app.use(passport.initialize());
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 const cspOptions = {
   directives: {
@@ -78,7 +26,7 @@ const cspOptions = {
 };
 
 var corsOptions = {
-  origin: ['https://dev.festivo.co/'],
+  origin: ['https://dev.festivo.co/', 'https://api.festivo.co/'],
   optionsSuccessStatus: 200
 }
 

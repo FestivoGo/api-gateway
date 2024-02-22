@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LoginWithGoogle = exports.UpdatePlayerDataByID = exports.GetPlayersByID = exports.GetAllPlayers = void 0;
+exports.CreateNewPlayer = exports.UpdatePlayerDataByID = exports.GetPlayersByID = exports.GetAllPlayers = void 0;
 const Player_1 = __importDefault(require("../../models/Player"));
 const response_1 = __importDefault(require("../response"));
 const Character_1 = __importDefault(require("../../models/Character"));
@@ -64,18 +64,16 @@ const UpdatePlayerDataByID = async (req, res) => {
     }
 };
 exports.UpdatePlayerDataByID = UpdatePlayerDataByID;
-const LoginWithGoogle = async (req, res) => {
+const CreateNewPlayer = async (req, res) => {
+    const playerData = req.body;
     try {
-        return res.json({
-            ResultCode: 1,
-            UserId: req.user.id,
-            Data: req.user
-        });
+        const findPlayer = await Player_1.default.create(playerData);
+        (0, response_1.default)(201, "success membuat player baru", findPlayer, res);
     }
     catch (error) {
-        console.error("Gagal login player", error);
+        console.error("Gagal membuat player baru:", error);
         res.status(500).json({ error: error.message });
     }
 };
-exports.LoginWithGoogle = LoginWithGoogle;
+exports.CreateNewPlayer = CreateNewPlayer;
 //# sourceMappingURL=playerController.js.map

@@ -1,9 +1,6 @@
 import { Request, Response } from "express";
 import Player from "../../models/Player";
 import response from "../response";
-import * as bcrypt from 'bcrypt';
-import path from "path";
-import fs from "fs"
 import Character from "../../models/Character";
 import Reaction from "../../models/Reaction";
 import Chat from "../../models/Chat";
@@ -59,15 +56,14 @@ export const UpdatePlayerDataByID = async (req: Request, res: Response) => {
       res.status(500).json({ error: error.message });
   }
 };
-export const LoginWithGoogle = async (req: Request, res: Response) => {
+
+export const CreateNewPlayer = async (req: Request, res: Response) => {
+  const playerData = req.body
   try {
-    return res.json({
-      ResultCode: 1,
-      UserId: req.user.id,
-      Data: req.user
-    })
+    const findPlayer = await Player.create(playerData)
+    response(201, "success membuat player baru", findPlayer, res)
   } catch (error) {
-      console.error("Gagal login player", error);
+      console.error("Gagal membuat player baru:", error);
       res.status(500).json({ error: error.message });
   }
 };
