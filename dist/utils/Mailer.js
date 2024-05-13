@@ -4,13 +4,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const nodemailer_1 = __importDefault(require("nodemailer"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
+const MAILER_EMAIL = process.env.MAILER_EMAIL;
+const MAILER_PASSWORD = process.env.MAILER_PASSWORD;
 exports.default = nodemailer_1.default.createTransport({
     host: "smtp.gmail.com",
     port: 465,
     secure: true,
     auth: {
-        user: "assamim80@gmail.com",
-        pass: "ogjgocvvmvjyjdew",
+        user: MAILER_EMAIL,
+        pass: MAILER_PASSWORD,
     },
 });
 //# sourceMappingURL=Mailer.js.map
