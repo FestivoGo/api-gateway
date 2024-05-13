@@ -1,10 +1,13 @@
 import { Request, Response } from "express";
-import Player from "../../models/Player";
-import response from "../response";
-import Character from "../../models/Character";
-import Reaction from "../../models/Reaction";
-import Chat from "../../models/Chat";
-import Emoticon from "../../models/Emoticon";
+import Player from "../../../models/Player";
+import response from "../../response";
+import Character from "../../../models/Character";
+import Reaction from "../../../models/Reaction";
+import Chat from "../../../models/Chat";
+import Emoticon from "../../../models/Emoticon";
+import {sign, verify} from "jsonwebtoken"
+import * as dotenv from "dotenv";
+dotenv.config();
   
 
 export const GetAllPlayers = async (req: Request, res: Response) => {
@@ -57,18 +60,40 @@ export const UpdatePlayerDataByID = async (req: Request, res: Response) => {
   }
 };
 
-export const CreateNewPlayer = async (req: Request, res: Response) => {
+export const LoginAndCreateNewPlayer = async (req: Request, res: Response) => {
   const playerData = req.body
   try {
-    const findPlayer = await Player.findOne({where: {email: playerData.email}})
+
+    if(!playerData.email) return res.status(400).json({message: "email field required"})
+
+    const findPlayer = await Player.findOne({where: {email: playerData.email}, attributes:{exclude:["createdAt", "updatedAt"]}})
+
     if(findPlayer) {
-      response(200, "success login player", findPlayer, res)
+
+      // const accessToken = sign({
+      //     id: findPlayer.id,
+      //   },
+      //     process.env.ACCESS_TOKEN_SECRET,
+      // )
+
+      // let dataWithToken = {
+      //   ...findPlayer.dataValues,
+      //   accessToken
+      // }
+      return response(200, "success login player", findPlayer, res)
     }else{
       const createPlayer = await Player.create(playerData)
-      response(201, "success membuat player baru", createPlayer, res)
+
+      // const accessToken = sign({
+      //   id: createPlayer.id,
+      // },
+      //   process.env.ACCESS_TOKEN_SECRET, 
+      // )
+
+      return response(201, "success membuat player baru", createPlayer, res)
     }
   } catch (error) {
       console.error("Gagal membuat player baru:", error);
-      res.status(500).json({ error: error.message });
+      return res.status(500).json({ error: error.message });
   }
 };

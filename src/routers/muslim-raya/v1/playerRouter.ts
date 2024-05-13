@@ -1,11 +1,11 @@
 import express from "express"
 import passport from "passport"
-import { CreateNewPlayer, GetAllPlayers, GetPlayersByID, UpdatePlayerDataByID,  } from "../../controllers/v1/playerController";
+import { GetAllPlayers, GetPlayersByID, LoginAndCreateNewPlayer, UpdatePlayerDataByID } from "../../../controllers/muslim-raya/v1/playerController";
 
 const router = express.Router()
 
 router.get("/", GetAllPlayers)
-router.post("/", CreateNewPlayer)
+router.post("/", LoginAndCreateNewPlayer)
 router.get("/:id", GetPlayersByID)
 router.put("/:id", UpdatePlayerDataByID)
 

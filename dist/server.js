@@ -9,27 +9,9 @@ const path_1 = __importDefault(require("path"));
 const multer_1 = __importDefault(require("multer"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cors_1 = __importDefault(require("cors"));
-const helmet_1 = __importDefault(require("helmet"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
-const cspOptions = {
-    directives: {
-        defaultSrc: ["'self'"],
-        imgSrc: ["'self'", "data:", "blob:"],
-        scriptSrc: [
-            "'self'",
-            'code.jquery.com',
-            'cdnjs.cloudflare.com',
-            'cdn.datatables.net',
-            "cdn.jsdelivr.net"
-        ],
-    },
-};
-var corsOptions = {
-    origin: ['https://dev.festivo.co/', 'https://api.festivo.co/'],
-    optionsSuccessStatus: 200
-};
 // default membuat folder untuk penempatan file upload
 if (!fs_1.default.existsSync("public/files/uploads")) {
     if (!fs_1.default.existsSync("public/files")) {
@@ -55,16 +37,8 @@ const storage = multer_1.default.diskStorage({
 });
 app.set("trust proxy", 1);
 app.use((0, multer_1.default)({ storage: storage, limits: { fileSize: 1000000 } }).any());
-app.use((0, cors_1.default)(corsOptions));
+app.use((0, cors_1.default)({ origin: "*" }));
 app.use((0, cookie_parser_1.default)());
-app.use((0, helmet_1.default)({
-    xFrameOptions: { action: "deny" },
-}));
-app.use(helmet_1.default.contentSecurityPolicy(cspOptions));
-app.use(helmet_1.default.hsts({
-    maxAge: 31536000,
-    includeSubDomains: true, // Sertakan subdomain
-}));
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use(express_1.default.json());
 app.use("/files", express_1.default.static(path_1.default.join(__dirname, "../public", "files")));
@@ -74,12 +48,15 @@ app.set("views", path_1.default.join(__dirname, "../views"));
 // ROUTER
 const models_1 = require("./models");
 const webRouter_1 = __importDefault(require("./routers/webRouter"));
-const v1Router_1 = __importDefault(require("./routers/v1Router"));
+const v1Router_1 = __importDefault(require("./routers/muslim-raya/v1Router"));
+const festivo_router_1 = __importDefault(require("./routers/festivo.co/festivo.router"));
 let PORT = process.env.PORT || 8000;
 (0, models_1.connectToDatabase)()
     .then(async () => {
     app.use("/", webRouter_1.default);
     app.use("/muslim-raya/v1", v1Router_1.default);
+    app.use("/festivo/v1", festivo_router_1.default);
+    // Error Handling
     app.all("*", (req, res, next) => {
         const err = new Error(`can't find ${req.originalUrl} on the server!`);
         next(err);

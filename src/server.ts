@@ -4,31 +4,11 @@ import path from "path";
 import multer from 'multer';
 import cookieParser from "cookie-parser"
 import cors from "cors"
-import helmet from 'helmet';
 import dotenv from "dotenv"
 
 dotenv.config();
 
 const app = express();
-
-const cspOptions = {
-  directives: {
-    defaultSrc: ["'self'"],
-    imgSrc: ["'self'", "data:", "blob:"], // Menambahkan "blob:"
-    scriptSrc: [
-      "'self'",
-      'code.jquery.com',
-      'cdnjs.cloudflare.com',
-      'cdn.datatables.net',
-      "cdn.jsdelivr.net"
-    ],
-  },
-};
-
-var corsOptions = {
-  origin: ['https://dev.festivo.co/', 'https://api.festivo.co/'],
-  optionsSuccessStatus: 200
-}
 
 // default membuat folder untuk penempatan file upload
 if (!fs.existsSync("public/files/uploads")) {
@@ -58,19 +38,8 @@ const storage = multer.diskStorage({
 
 app.set("trust proxy",1);
 app.use(multer({ storage: storage, limits: { fileSize: 1000000 } }).any());
-app.use(cors(corsOptions));
+app.use(cors({origin: "*"}));
 app.use(cookieParser());
-
-app.use(helmet({
-  xFrameOptions: { action: "deny" },
-}));
-app.use(helmet.contentSecurityPolicy(cspOptions));
-app.use(
-  helmet.hsts({
-    maxAge: 31536000, // Durasi HSTS dalam detik (setahun)
-    includeSubDomains: true, // Sertakan subdomain
-  })
-);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -84,15 +53,19 @@ app.set("views", path.join(__dirname, "../views"));
 // ROUTER
 import { connectToDatabase } from "./models";
 import webRouter from "./routers/webRouter";
-import v1Router from './routers/v1Router';
-import { createToken } from "./utils/JWT";
+import muslimRayaRouter from './routers/muslim-raya/v1Router';
+import festivoRouter from "./routers/festivo.co/festivo.router"
 
 let PORT = process.env.PORT || 8000;
 
 connectToDatabase()
   .then(async() => {
+
     app.use("/", webRouter);
-    app.use("/muslim-raya/v1", v1Router);
+    app.use("/muslim-raya/v1", muslimRayaRouter);
+    app.use("/festivo/v1", festivoRouter);
+
+    // Error Handling
     app.all("*", (req, res, next) => {
       const err = new Error(`can't find ${req.originalUrl} on the server!`);
       next(err);

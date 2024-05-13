@@ -19,7 +19,10 @@ Player.init({
         primaryKey: true,
         unique: true,
     },
-    email: sequelize_1.DataTypes.STRING,
+    email: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: false,
+    },
     username: sequelize_1.DataTypes.STRING,
     nur: {
         type: sequelize_1.DataTypes.INTEGER,

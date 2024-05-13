@@ -31,7 +31,10 @@ Player.init(
       primaryKey: true,
       unique: true,
     },
-    email: DataTypes.STRING,
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     username: DataTypes.STRING,
     nur: {
       type: DataTypes.INTEGER,

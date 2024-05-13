@@ -1,5 +1,5 @@
 import express from "express";
-import indexRouter from "./indexRoute";
+import indexRouter from "../indexRoute";
 import playerRouter from "./v1/playerRouter"
 
 const v1Router = express.Router()
