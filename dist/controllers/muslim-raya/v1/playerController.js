@@ -37,14 +37,28 @@ const dotenv = __importStar(require("dotenv"));
 dotenv.config();
 const GetAllPlayers = async (req, res) => {
     try {
-        const PLAYERS = await Player_1.default.findAll({ attributes: { exclude: ["createdAt", "updatedAt"] }, include: [
+        let page = +req.query.page || 1;
+        let limit = +req.query.limit || 20;
+        const PLAYERS = await Player_1.default.findAll({
+            offset: (page - 1) * limit,
+            limit: limit,
+            attributes: { exclude: ["createdAt", "updatedAt"] }, include: [
                 { model: Character_1.default, as: "characters", through: { attributes: [] }, attributes: { exclude: ["createdAt", "updatedAt"] } },
                 { model: Reaction_1.default, as: "reactions", through: { attributes: [] }, attributes: { exclude: ["createdAt", "updatedAt"] } },
                 { model: Chat_1.default, as: "chats", through: { attributes: [] }, attributes: { exclude: ["createdAt", "updatedAt"] } },
                 { model: Emoticon_1.default, as: "emoticons", through: { attributes: [] }, attributes: { exclude: ["createdAt", "updatedAt"] } },
                 { model: Player_1.default, as: "friends", through: { attributes: [] }, attributes: { exclude: ["createdAt", "updatedAt"] } },
-            ] });
-        (0, response_1.default)(200, "success get all players", PLAYERS, res);
+            ]
+        });
+        const total_page = Math.ceil(await Player_1.default.count() / limit);
+        return res.status(200).json({
+            status_code: 200,
+            message: "success get all player",
+            limit,
+            page,
+            total_page,
+            datas: PLAYERS
+        });
     }
     catch (error) {
         console.error("Gagal mengambil data pengguna:", error);

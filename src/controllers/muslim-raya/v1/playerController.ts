@@ -5,21 +5,37 @@ import Character from "../../../models/Character";
 import Reaction from "../../../models/Reaction";
 import Chat from "../../../models/Chat";
 import Emoticon from "../../../models/Emoticon";
-import {sign, verify} from "jsonwebtoken"
 import * as dotenv from "dotenv";
 dotenv.config();
   
 
 export const GetAllPlayers = async (req: Request, res: Response) => {
   try {
-    const PLAYERS = await Player.findAll({attributes:{exclude:["createdAt","updatedAt"]}, include:[
-      {model:Character, as:"characters", through:{attributes:[]}, attributes:{exclude:["createdAt","updatedAt"]}},
-      {model:Reaction, as:"reactions", through:{attributes:[]}, attributes:{exclude:["createdAt","updatedAt"]}},
-      {model:Chat, as:"chats", through:{attributes:[]}, attributes:{exclude:["createdAt","updatedAt"]}},
-      {model:Emoticon, as:"emoticons", through:{attributes:[]}, attributes:{exclude:["createdAt","updatedAt"]}},
-      {model:Player, as:"friends", through:{attributes:[]}, attributes:{exclude:["createdAt","updatedAt"]}},
+
+    let page = +req.query.page || 1
+    let limit = +req.query.limit || 20
+
+    const PLAYERS = await Player.findAll({
+      offset: (page-1) * limit,
+      limit: limit,
+      attributes:{exclude:["createdAt","updatedAt"]}, include:[
+        {model:Character, as:"characters", through:{attributes:[]}, attributes:{exclude:["createdAt","updatedAt"]}},
+        {model:Reaction, as:"reactions", through:{attributes:[]}, attributes:{exclude:["createdAt","updatedAt"]}},
+        {model:Chat, as:"chats", through:{attributes:[]}, attributes:{exclude:["createdAt","updatedAt"]}},
+        {model:Emoticon, as:"emoticons", through:{attributes:[]}, attributes:{exclude:["createdAt","updatedAt"]}},
+        {model:Player, as:"friends", through:{attributes:[]}, attributes:{exclude:["createdAt","updatedAt"]}},
     ]});
-    response(200, "success get all players", PLAYERS, res);
+
+    const total_page = Math.ceil(await Player.count() / limit)
+
+    return res.status(200).json({
+      status_code: 200,
+      message: "success get all player",
+      limit,
+      page,
+      total_page,
+      datas: PLAYERS
+    })
   } catch (error) {
     console.error("Gagal mengambil data pengguna:", error);
     res.status(500).json({ error: error.message });

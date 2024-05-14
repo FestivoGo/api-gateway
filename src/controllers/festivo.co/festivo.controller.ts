@@ -18,7 +18,7 @@ export async function SendEmail(req: Request, res:Response){
     </head>
     <body>
         <h3>From: ${emailData.email}</h3>
-        <p>message: ${emailData.message}</p>
+        <p>${emailData.message}</p>
     </body>
     </html>
     `
@@ -29,7 +29,7 @@ export async function SendEmail(req: Request, res:Response){
 
         const info = await transporter.sendMail({
             from: `"Form Dari Website Festivo.co" <${MAILER_EMAIL}>`,
-            to: MAILER_EMAIL,
+            to: "hello@festivo.co",
             subject: emailData.subject,
             html: emailBody,
         });

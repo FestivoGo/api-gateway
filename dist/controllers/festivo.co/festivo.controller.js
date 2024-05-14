@@ -20,7 +20,7 @@ async function SendEmail(req, res) {
     </head>
     <body>
         <h3>From: ${emailData.email}</h3>
-        <p>message: ${emailData.message}</p>
+        <p>${emailData.message}</p>
     </body>
     </html>
     `;
@@ -29,7 +29,7 @@ async function SendEmail(req, res) {
             return res.status(400).json({ message: "all field required" });
         const info = await Mailer_1.default.sendMail({
             from: `"Form Dari Website Festivo.co" <${MAILER_EMAIL}>`,
-            to: MAILER_EMAIL,
+            to: "hello@festivo.co",
             subject: emailData.subject,
             html: emailBody,
         });
